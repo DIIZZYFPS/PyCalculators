@@ -1,4 +1,4 @@
-class Calculator:
+class Calculator: # this class contains the basic operations of a calculator
     def __init__(self):
         self.result = 0
 
@@ -17,15 +17,50 @@ class Calculator:
     def divide(self, a, b):
         self.result = a / b
         return self.result
+        
 
 calc = Calculator()
 
 def main():
     operation = input("Enter the operation: ")
-    print(checkOperation(operation))
+    print(actionOrder(operation))
 
-def checkOperation(operation):
-    operands = operation.split()
+def createOperation(operation): # this function takes the user input and creates a list of operands and operators removing any spaces
+    operation = operation.replace(' ', '')
+
+    operands = []
+
+    for num in range(len(operation)):
+        if operation[num].isdigit():
+            operands.append(float(operation[num]))
+        else:
+            operands.append(operation[num])
+
+    return operands
+
+def actionOrder(operation):
+    operands = createOperation(operation)
+
+    op = operands.count('(')
+
+    while op != 0:
+        for num in range(len(operands)):
+            if operands[num] == '(':
+                start = num
+            if operands[num] == ')':
+                end = num
+                result = checkOperation(operands[start + 1:end])
+                operands[start] = result
+                for num in range(end - start):
+                    operands.pop(start + 1)
+                op -= 1
+                break
+    return operands[0]
+
+
+
+def checkOperation(operation): 
+    operands = operation
 
     result = 0
 
