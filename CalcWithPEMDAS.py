@@ -42,25 +42,35 @@ def actionOrder(operation):
     operands = createOperation(operation)
 
     op = operands.count('(')
+    result = 0
 
-    while op != 0:
-        for num in range(len(operands)):
-            if operands[num] == '(':
-                start = num
-            if operands[num] == ')':
-                end = num
-                result = checkOperation(operands[start + 1:end])
-                operands[start] = result
-                for num in range(end - start):
-                    operands.pop(start + 1)
-                op -= 1
-                break
+    if op > 0:
+        while op != 0:
+            for num in range(len(operands)):
+                if operands[num] == '(':
+                    start = num
+                if operands[num] == ')':
+                    end = num
+                    result = checkOperation(operands[start + 1:end])
+                    operands[start] = result
+                    for num in range(end - start):
+                        operands.pop(start + 1)
+                    op -= 1
+                    break
+        if len(operands) > 1:
+            result = checkOperation(operands)
+            operands[0] = result
+    else:
+        result = checkOperation(operands)
+        operands[0] = result
+
     return operands[0]
 
 
 
 def checkOperation(operation): 
     operands = operation
+    
 
     result = 0
 
@@ -68,6 +78,9 @@ def checkOperation(operation):
     div = operands.count('/')
     add = operands.count('+')
     sub = operands.count('-')
+
+    if len(operands) == 1:
+        return operands[0]
 
     while mult != 0 or div != 0:
         if mult > 0:
